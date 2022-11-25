@@ -4,7 +4,7 @@ models:
   - name: silver__nft_sales
     description: |-
       This table contains nft sales transactions that happens on various marketplace in the terra2 blockchain
-            
+
     columns:
       - name: unique_id
         description: "{{ doc('unique_key') }}"
@@ -13,7 +13,6 @@ models:
           - not_null
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: varchar
-
 
       - name: block_id
         description: "{{ doc('block_id') }}"
@@ -90,7 +89,6 @@ models:
                 - STRING
                 - VARCHAR
 
-
       - name: sales_amount
         description: "{{ doc('sales_amount') }}"
         tests:
@@ -116,7 +114,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
-      
+
       - name: _INGESTED_AT
         description: "{{ doc('_ingested_at') }}"
 

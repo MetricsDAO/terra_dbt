@@ -5,7 +5,6 @@ models:
     description: |-
       This table contains nft sales transactions that happens on various marketplace in the terra2 blockchain
     tests:
-
     columns:
       - name: block_id
         description: "{{ doc('block_id') }}"
@@ -81,7 +80,6 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
-
 
       - name: sales_amount
         description: "{{ doc('sales_amount') }}"
