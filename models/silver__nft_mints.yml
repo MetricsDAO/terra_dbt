@@ -1,4 +1,4 @@
-
+version: 2
 
 models:
   - name: silver__nft_mints
