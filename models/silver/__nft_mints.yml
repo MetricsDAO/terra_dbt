@@ -116,8 +116,8 @@ models:
               column_type_list:
                 - NUMBER
         
-        - name: UNIQUE_KEY
-        description: "{{ doc('unique_key') }}"
+        - name: MINT_ID
+        description: "{{ doc('mint_id') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -125,10 +125,8 @@ models:
                 - STRING
                 - VARCHAR
 
+      - name: _INGESTED_AT
+        description: "{{ doc('_ingested_at') }}"
+
       - name: _INSERTED_TIMESTAMP
         description: "{{ doc('_inserted_timestamp') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - TIMESTAMP_NTZ
