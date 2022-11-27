@@ -116,8 +116,8 @@ models:
               column_type_list:
                 - NUMBER
         
-        - name: UNIQUE_KEY
-        description: "{{ doc('unique_key') }}"
+        - name: mint_id
+        description: "{{ doc('mint_id') }}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
