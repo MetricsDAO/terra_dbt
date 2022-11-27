@@ -1,1 +1,138 @@
+version: 2
 
+models:
+  - name: silver__nft_mints
+    description: |-
+       This table contains nft mints transactions that happens on various marketplace in the terra2 blockchain
+ 
+
+    columns: 
+    
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
+                
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
+
+      - name: BLOCK_CHAIN
+        description: "{{ doc('block_chain')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+                
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: TX_ID
+        description: "{{ doc('tx_id')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+                
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - BOOLEAN
+                
+
+      - name: MINTER
+        description: "{{ doc('minter')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: CONTRACT_ADDRESS
+        description: "{{ doc('contract_address') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+                 
+
+      - name: TOKEN_ID
+        description: "{{ doc(token_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+              
+
+      - name: MINT_PRICE
+        description: "{{ doc('mint_price') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                
+      - name: CURRENCY
+        description: "{{ doc ('currency') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: DECIMAL
+        description: "{{ doc('decimal') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+        
+        - name: mint_id
+        description: "{{ doc('mint_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: _INGESTED_AT
+        description: "{{ doc('_ingested_at') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
+                
+       - name: _INSERTED_TIMESTAMP
+        description: "{{ doc('_inserted_timestamp') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
