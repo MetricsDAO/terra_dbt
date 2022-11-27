@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: silver__nft_mints
+  - name: core__nft_mints
     description: |-
        This table contains nft mints transactions that happens on various marketplace in the terra2 blockchain
  
