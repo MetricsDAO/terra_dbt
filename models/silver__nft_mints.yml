@@ -3,11 +3,8 @@ version: 2
 models:
   - name: silver__nft_mints
     description: |-
-      This table records all the nft mints transfer in the terra db
-    tests: 
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - UNIQUE_KEY
+       This table contains nft mints transactions that happens on various marketplace in the terra2 blockchain
+ 
 
     columns: 
     
