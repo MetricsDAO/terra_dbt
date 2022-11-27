@@ -25,8 +25,8 @@ models:
               column_type_list:
                 - TIMESTAMP_NTZ
 
-      - name: BLOCK_CHAIN
-        description: "{{ doc('block_chain')}}"
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain')}}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -113,7 +113,7 @@ models:
               column_type_list:
                 - NUMBER
         
-        - name: mint_id
+      - name: MINT_ID
         description: "{{ doc('mint_id') }}"
         tests:
           - not_null
@@ -121,18 +121,3 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
-
-      - name: _INGESTED_AT
-        description: "{{ doc('_ingested_at') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - TIMESTAMP_NTZ
-                
-       - name: _INSERTED_TIMESTAMP
-        description: "{{ doc('_inserted_timestamp') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
