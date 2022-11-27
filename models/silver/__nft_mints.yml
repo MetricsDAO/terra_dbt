@@ -28,8 +28,8 @@ models:
               column_type_list:
                 - TIMESTAMP_NTZ
 
-      - name: BLOCK_CHAIN
-        description: "{{ doc('block_chain')}}"
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain')}}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
