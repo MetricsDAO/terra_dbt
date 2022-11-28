@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: core__fact_nft_mints
+    description: |-
+      This table contains nft mints transactions that happens on various marketplace in the terra2 blockchain
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - MINT_ID
+
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain')}}"
+
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id')}}"
+
+      - name: TX_ID
+        description: "{{ doc('tx_id')}}"
+
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded')}}"
+
+      - name: MINTER
+        description: "{{ doc('minter')}}"
+
+      - name: CONTRACT_ADDRESS
+        description: "{{ doc('contract_address') }}"
+
+      - name: TOKEN_ID
+        description: "{{ doc('token_id') }}"
+
+      - name: MINT_PRICE
+        description: "{{ doc('mint_price') }}"
+
+      - name: CURRENCY
+        description: "{{ doc ('currency') }}"
+
+      - name: DECIMAL
+        description: "{{ doc('decimal') }}"
+
+      - name: MINT_ID
+        description: "{{ doc('mint_id') }}"

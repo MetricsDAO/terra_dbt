@@ -1,21 +1,16 @@
 version: 2
 
 models:
-  - name: silver__nft_sales
+  - name: silver__nft_mints
     description: |-
-      This table contains nft sales transactions that happens on various marketplace in the terra2 blockchain
-
+      This table records all the nft mints transfer in the terra db
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - MINT_ID
     columns:
-      - name: unique_id
-        description: "{{ doc('unique_key') }}"
-        tests:
-          - unique
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: varchar
-
-      - name: block_id
-        description: "{{ doc('block_id') }}"
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -23,15 +18,16 @@ models:
                 - NUMBER
                 - FLOAT
 
-      - name: block_timestamp
-        description: "{{ doc('block_timestamp') }}"
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
         tests:
           - not_null
-          - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: timestamp_ntz
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
 
-      - name: tx_id
-        description: "{{ doc('tx_id') }}"
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain')}}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
@@ -39,81 +35,86 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: tx_succeeded
-        description: "{{ doc('tx_succeeded') }}"
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: TX_ID
+        description: "{{ doc('tx_id')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded')}}"
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - BOOLEAN
 
-      - name: chain_id
-        description: "{{ doc('chain_id') }}"
+      - name: MINTER
+        description: "{{ doc('minter')}}"
         tests:
-          - not_null
-          - accepted_values:
-              values:
-                - "phoenix-1"
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
                 - VARCHAR
 
-      - name: blockchain
-        description: "{{ doc('blockchain') }}"
+      - name: CONTRACT_ADDRESS
+        description: "{{ doc('contract_address') }}"
         tests:
-          - not_null
-          - accepted_values:
-              values:
-                - "terra"
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
                 - VARCHAR
 
-      - name: purchaser
-        description: "{{ doc('purchaser') }}"
+      - name: TOKEN_ID
+        description: "{{ doc('token_id') }}"
         tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - STRING
-                - VARCHAR
-
-      - name: seller
-        description: "{{ doc('seller') }}"
-        tests:
-          - not_null
-          - dbt_expectations.expect_column_values_to_be_in_type_list:
-              column_type_list:
-                - STRING
-                - VARCHAR
-
-      - name: sales_amount
-        description: "{{ doc('sales_amount') }}"
-        tests:
-          - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
-                - FLOAT
 
-      - name: currency
-        description: "{{ doc('currency') }}"
+      - name: MINT_PRICE
+        description: "{{ doc('mint_price') }}"
         tests:
-          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+
+      - name: CURRENCY
+        description: "{{ doc ('currency') }}"
+        tests:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - STRING
                 - VARCHAR
 
-      - name: decimals
+      - name: DECIMAL
         description: "{{ doc('decimal') }}"
         tests:
-          - not_null
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - NUMBER
+
+      - name: MINT_ID
+        description: "{{ doc('mint_id') }}"
+        tests:
+          - not_null
+          - unique
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
 
       - name: _INGESTED_AT
         description: "{{ doc('_ingested_at') }}"
