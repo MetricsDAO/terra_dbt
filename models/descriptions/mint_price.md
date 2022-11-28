@@ -1,4 +1,4 @@
-{% docs attribute_key %}
+{% docs mint_price %}
 
 The price of the mint in tokens
 
