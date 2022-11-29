@@ -1,0 +1,110 @@
+version: 2
+
+models:
+  - name: core__fact_nft_sales
+    description: |-
+      This table contains nft sales transactions that happens on various marketplace in the terra2 blockchain
+    tests:
+
+    columns:
+      - name: block_id
+        description: "{{ doc('block_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
+
+      - name: block_timestamp
+        description: "{{ doc('block_timestamp') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: timestamp_ntz
+
+      - name: tx_id
+        description: "{{ doc('tx_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: tx_succeeded
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - BOOLEAN
+
+      - name: chain_id
+        description: "{{ doc('chain_id') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - "phoenix-1"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: blockchain
+        description: "{{ doc('blockchain') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - "terra"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: purchaser
+        description: "{{ doc('purchaser') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: seller
+        description: "{{ doc('seller') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+
+      - name: sales_amount
+        description: "{{ doc('sales_amount') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
+
+      - name: currency
+        description: "{{ doc('currency') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: decimals
+        description: "{{ doc('decimal') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER

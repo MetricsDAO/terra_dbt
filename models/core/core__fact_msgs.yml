@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: core__fact_msgs
+    description: |-
+      This table contains all the messages events of the Terra2 blockchain.
+
+    columns:
+      - name: BLOCK_ID
+        description: "{{ doc('block_id')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+                - FLOAT
+
+      - name: BLOCK_TIMESTAMP
+        description: "{{ doc('block_timestamp')}}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - TIMESTAMP_NTZ
+      
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - "terra"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+      
+      - name: CHAIN_ID
+        description: "{{ doc('chain_id') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - "phoenix-1"
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: TX_ID
+        description: "{{ doc('tx_id') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - VARCHAR
+
+      - name: TX_SUCCEEDED
+        description: "{{ doc('tx_succeeded') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - BOOLEAN
+      
+      - name: MSG_GROUP
+        description: "{{ doc('msg_group') }}"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - STRING
+                - VARCHAR
+
+      - name: MSG_INDEX
+        description: "{{ doc('message_index') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - NUMBER
+
+      - name: MSG_TYPE
+        description: "{{ doc('message_type') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - VARCHAR
+
+      - name: MSG
+        description: "{{ doc('msg') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - VARIANT

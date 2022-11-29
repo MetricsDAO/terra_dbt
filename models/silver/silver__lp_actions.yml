@@ -14,7 +14,7 @@ models:
           - unique
           - not_null
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
 
       - name: block_id
         description: "{{ doc('block_id') }}"
@@ -41,7 +41,7 @@ models:
               to: ref('silver__transactions')
               field: tx_id
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
 
       - name: tx_succeeded
         description: "{{ doc('tx_succeeded') }}"
@@ -56,9 +56,9 @@ models:
           - not_null
           - accepted_values:
               values:
-                - 'phoenix-1'
+                - "phoenix-1"
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
 
       - name: blockchain
         description: "{{ doc('blockchain') }}"
@@ -66,19 +66,16 @@ models:
           - not_null
           - accepted_values:
               values:
-                - 'terra'
+                - "terra"
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
 
       - name: liquidity_provider_address
         description: "{{ doc('liquidity_provider_address') }}"
         tests:
           - not_null
-          - relationships:
-              to: ref('core__dim_address_labels')
-              field: address
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
           - dbt_expectations.expect_column_values_to_match_like_pattern:
               like_pattern: "terra%"
 
@@ -88,19 +85,22 @@ models:
           - not_null
           - accepted_values:
               values:
-                - 'burn_lp_token'
-                - 'mint_lp_token'
-                - 'provide_liquidity'
-                - 'withdraw_liquidity'
+                - "burn_lp_token"
+                - "mint_lp_token"
+                - "provide_liquidity"
+                - "withdraw_liquidity"
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
 
       - name: pool_address
         description: "{{ doc('liquidity_pool_address') }}"
         tests:
           - not_null
+          - relationships:
+              to: ref('core__dim_address_labels')
+              field: address
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
           - dbt_expectations.expect_column_values_to_match_like_pattern:
               like_pattern: "terra%"
 
@@ -118,14 +118,15 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_of_type:
-              column_type: string
+              column_type: varchar
 
       - name: decimals
         description: "{{ doc('decimal') }}"
         tests:
-          - not_null
+          - not_null:
+              enabled: false
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type: number
+              enabled: false
           - dbt_expectations.expect_column_min_to_be_between:
               min_value: 0
-
