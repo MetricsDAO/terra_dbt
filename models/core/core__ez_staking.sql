@@ -14,8 +14,6 @@ select
    delegator_address,
    amount,
    validator_address,
-   _ingested_at,
-   _inserted_timestamp,
    validator_src_address,
    validator_label.label AS validator_label,
    validator_src_label.label AS validator_src_label
