@@ -7,6 +7,14 @@
 WITH txs AS (
 
   SELECT
+    *
+  FROM
+    {{ ref("silver__transactions") }}
+  WHERE
+    {{ incremental_load_filter("_inserted_timestamp") }}
+),
+flatten_txs AS (
+  SELECT
     tx_id,
     block_timestamp,
     'terra' AS blockchain,
@@ -20,12 +28,10 @@ WITH txs AS (
     _ingested_at,
     _inserted_timestamp
   FROM
-    {{ ref("silver__transactions") }},
+    txs,
     LATERAL FLATTEN(
       input => tx :tx_result :log
     )
-  WHERE
-    {{ incremental_load_filter("_inserted_timestamp") }}
 ),
 block_table AS (
   SELECT
@@ -38,11 +44,11 @@ block_table AS (
 ),
 msg_table AS (
   SELECT
-    txs.block_id,
-    txs.block_timestamp,
-    txs.blockchain,
-    txs.tx_id,
-    txs.tx_succeeded,
+    flatten_txs.block_id,
+    flatten_txs.block_timestamp,
+    flatten_txs.blockchain,
+    flatten_txs.tx_id,
+    flatten_txs.tx_succeeded,
     flatten_log.value AS msg,
     flatten_log.index :: INT AS msg_index,
     msg :type :: STRING AS msg_type,
@@ -67,7 +73,7 @@ msg_table AS (
     _ingested_at,
     _inserted_timestamp
   FROM
-    txs,
+    flatten_txs,
     LATERAL FLATTEN(
       input => logs
     ) flatten_log
