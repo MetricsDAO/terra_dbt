@@ -2,6 +2,7 @@
   materialized = "incremental",
   cluster_by = ["_inserted_timestamp"],
   unique_key = "message_id",
+  incremental_strategy = 'delete+insert'
 ) }}
 
 WITH txs AS (
