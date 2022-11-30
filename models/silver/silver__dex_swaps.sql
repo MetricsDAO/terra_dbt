@@ -26,7 +26,7 @@ with
                 attributes:coin_received:currency_0::string,
                 attributes:coin_received:currency::string
             ) as from_currency,
-            round(from_amount / pow(10, 6)) as from_decimal,
+            6 AS decimals,
             coalesce(
                 attributes:coin_received:amount_1::integer,
                 attributes:wasm:return_amount::integer
@@ -71,7 +71,7 @@ with
                 attributes:coin_received:currency_2::string,
                 attributes:coin_received:currency_1::string
             ) as to_currency,
-            round(to_amount / pow(10, 6)) as to_decimal,
+            6 AS decimals,
             message_value:contract::string as contract_address,
 
 
