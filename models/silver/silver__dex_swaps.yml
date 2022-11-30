@@ -95,8 +95,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
                column_type_list:
                  - decimal
-                 - float
                  - NUMBER
+                 - FLOAT
           
       - name: to_amount
         description: "{{ doc('to_amount') }}"
@@ -121,8 +121,8 @@ models:
           - dbt_expectations.expect_column_values_to_be_in_type_list:
               column_type_list:
                 - decimal
-                - float
                 - NUMBER
+                - FLOAT
 
       - name: _INSERTED_TIMESTAMP
         description: "{{ doc('_inserted_timestamp') }}"
