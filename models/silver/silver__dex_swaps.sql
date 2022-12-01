@@ -72,7 +72,7 @@ with
                 attributes:coin_received:currency_2::string,
                 attributes:coin_received:currency_1::string
             ) as to_currency,
-            round(to_amount / pow(10, 6)) as to_decimal,
+            6 :: INTEGER as to_decimal,
             message_value:contract::string as contract_address
 
         from {{ ref("silver__messages") }}
@@ -123,12 +123,26 @@ with
 
     ),
 
+    transactions as (
+        select 
+            tx_id,
+            tx_sender 
+        from {{ref ('silver__transactions')}}
+        WHERE
+        {{ incremental_load_filter("_inserted_timestamp") }}
+    ),
 
+    labels as (
+        select 
+            label,
+            address
+        from {{ref ('core__dim_address_labels')}}
+    ),
 
     final_table as (
 
         select distinct
-            concat(s.tx_id, '-', msg_index, '-', s.contract_address, '-') as swap_id,
+            CONCAT_WS ('-', s.tx_id, msg_index, s.contract_address) as swap_id,
             s.block_id,
             s.block_timestamp,
             s._inserted_timestamp,
@@ -145,9 +159,8 @@ with
             to_decimal,
             label as pool_id
         from union_swaps s
-        left outer join {{ ref("silver__transactions") }} t on s.tx_id = t.tx_id
-        left outer join
-            {{ ref("core__dim_address_labels") }} l on l.address = s.contract_address
+        left outer join transactions t on s.tx_id = t.tx_id
+        left outer join labels l on l.address = s.contract_address
 
 
     )
