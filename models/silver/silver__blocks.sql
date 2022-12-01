@@ -28,29 +28,62 @@ WITH base_blocks AS (
                 _inserted_timestamp DESC
         ) = 1
 ),
+validator_signatures as (
+    SELECT
+        header :last_commit :height as block_id,
+        header :last_commit :signatures as signatures
+    FROM
+        -- {{ ref('bronze__blocks') }}
+        base_blocks
+--     WHERE
+-- TRUE
+--         qualify row_number() over (
+--             partition by block_id 
+--             order by 
+--                 _inserted_timestamp) = 1
+),
+validator_addresses as (
+    SELECT
+        validator_signatures.block_id as block_id,
+        s0.value :validator_address as validator_address
+    FROM
+        validator_signatures
+        , lateral flatten(input => validator_signatures.signatures) as s0
+),
+validators_address_array as (
+    SELECT
+        validator_addresses.block_id as block_id,
+        ARRAY_AGG(distinct validator_addresses.validator_address) as address_array
+    FROM
+        validator_addresses
+    GROUP BY validator_addresses.block_id
+),
 FINAL AS (
     SELECT
-        block_id,
-        block_timestamp,
-        tx_count,
-        header :app_hash :: STRING AS block_hash,
-        header :chain_id :: STRING AS chain_id,
-        header :consensus_hash :: STRING AS consensus_hash,
-        header :data_hash :: STRING AS data_hash,
-        header :evidence AS evidence,
-        header :evidence_hash :: STRING AS evidence_hash,
-        header :height :: INTEGER AS block_height,
-        header :last_block_id AS last_block_id,
-        header :last_commit AS last_commit,
-        header :last_commit_hash :: STRING AS last_commit_hash,
-        header :last_results_hash :: STRING AS last_results_hash,
-        header :next_validators_hash :: STRING AS next_validators_hash,
-        header :proposer_address :: STRING AS proposer_address,
-        header :validators_hash :: STRING AS validators_hash,
-        _ingested_at,
-        _inserted_timestamp
+        base_blocks.block_id as block_id,
+        base_blocks.block_timestamp as block_timestamp,
+        base_blocks.tx_count as tx_count,
+        base_blocks.header :app_hash :: STRING AS block_hash,
+        base_blocks.header :chain_id :: STRING AS chain_id,
+        base_blocks.header :consensus_hash :: STRING AS consensus_hash,
+        base_blocks.header :data_hash :: STRING AS data_hash,
+        base_blocks.header :evidence AS evidence,
+        base_blocks.header :evidence_hash :: STRING AS evidence_hash,
+        base_blocks.header :height :: INTEGER AS block_height,
+        base_blocks.header :last_block_id AS last_block_id,
+        base_blocks.header :last_commit AS last_commit,
+        base_blocks.header :last_commit_hash :: STRING AS last_commit_hash,
+        base_blocks.header :last_results_hash :: STRING AS last_results_hash,
+        base_blocks.header :next_validators_hash :: STRING AS next_validators_hash,
+        base_blocks.header :proposer_address :: STRING AS proposer_address,
+        base_blocks.header :validators_hash :: STRING AS validators_hash,
+        base_blocks._ingested_at AS _ingested_at,
+        base_blocks._inserted_timestamp AS _inserted_timestamp,
+        validators_address_array.address_array AS validator_address_array
     FROM
         base_blocks
+    LEFT JOIN validators_address_array 
+        on validators_address_array.block_id = base_blocks.block_id
 )
 SELECT
     *
