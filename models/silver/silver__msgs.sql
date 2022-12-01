@@ -2,7 +2,6 @@
   materialized = "incremental",
   cluster_by = ["_inserted_timestamp"],
   unique_key = "message_id",
-  incremental_strategy = 'delete+insert'
 ) }}
 
 WITH txs AS (
@@ -23,9 +22,7 @@ flatten_txs AS (
     tx,
     tx_succeeded,
     VALUE :events AS logs,
-    VALUE :msg_index :: NUMBER AS message_index,
-    tx :body :messages [0] :"@type" :: STRING AS message_type,
-    tx :body :messages [message_index] AS message_value,
+    VALUE :msg_index :: NUMBER AS msg_index,
     _ingested_at,
     _inserted_timestamp
   FROM
@@ -145,13 +142,13 @@ add_chain_id AS (
     JOIN block_table blk
     ON msg_t.block_id = blk.block_id
 ),
-FINAL AS (
+prefinal AS (
   SELECT
-    CONCAT(
-      tx_id,
-      '-',
-      msg_index
-    ) AS message_id,
+    ROW_NUMBER() over (
+      PARTITION BY tx_id
+      ORDER BY
+        tx_id
+    ) AS unique_number,
     block_id,
     block_timestamp,
     blockchain,
@@ -170,6 +167,29 @@ FINAL AS (
     _inserted_timestamp
   FROM
     add_chain_id
+),
+FINAL AS (
+  SELECT
+    concat_ws(
+      '-',
+      tx_id,
+      msg_index,
+      unique_number
+    ) AS message_id,
+    block_id,
+    block_timestamp,
+    blockchain,
+    chain_id,
+    tx_id,
+    tx_succeeded,
+    msg_group,
+    msg_index,
+    msg_type,
+    msg,
+    _ingested_at,
+    _inserted_timestamp
+  FROM
+    prefinal
 )
 SELECT
   *

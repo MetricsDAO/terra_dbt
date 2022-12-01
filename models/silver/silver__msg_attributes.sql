@@ -2,7 +2,6 @@
   materialized = "incremental",
   cluster_by = ["_inserted_timestamp"],
   unique_key = "message_id",
-  incremental_strategy = 'delete+insert'
 ) }}
 
 WITH txs AS (
@@ -15,7 +14,6 @@ WITH txs AS (
     {{ incremental_load_filter("_inserted_timestamp") }}
 ),
 flatten_txs AS (
-
   SELECT
     tx_id,
     block_timestamp,
@@ -148,11 +146,6 @@ add_chain_id AS (
 ),
 final_msg_table AS (
   SELECT
-    CONCAT(
-      tx_id,
-      '-',
-      msg_index
-    ) AS message_id,
     block_id,
     block_timestamp,
     blockchain,
@@ -174,6 +167,11 @@ final_msg_table AS (
 ),
 msg_attribute AS (
   SELECT
+    ROW_NUMBER() over (
+      PARTITION BY tx_id
+      ORDER BY
+        tx_id
+    ) AS unique_number,
     block_id,
     block_timestamp,
     blockchain,
@@ -203,7 +201,13 @@ msg_attribute AS (
 ),
 FINAL AS (
   SELECT
-    message_id,
+    concat_ws(
+      '-',
+      tx_id,
+      msg_index,
+      attribute_index,
+      unique_number
+    ) AS message_id,
     block_id,
     block_timestamp,
     blockchain,
