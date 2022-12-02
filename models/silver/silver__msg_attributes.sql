@@ -15,7 +15,6 @@ WITH txs AS (
     {{ incremental_load_filter("_inserted_timestamp") }}
 ),
 flatten_txs AS (
-
   SELECT
     tx_id,
     block_timestamp,
@@ -24,9 +23,7 @@ flatten_txs AS (
     tx,
     tx_succeeded,
     VALUE :events AS logs,
-    VALUE :msg_index :: NUMBER AS message_index,
-    tx :body :messages [0] :"@type" :: STRING AS message_type,
-    tx :body :messages [message_index] AS message_value,
+    VALUE :msg_index :: NUMBER AS msg_index,
     _ingested_at,
     _inserted_timestamp
   FROM
@@ -52,7 +49,7 @@ msg_table AS (
     flatten_txs.tx_id,
     flatten_txs.tx_succeeded,
     flatten_log.value AS msg,
-    flatten_log.index :: INT AS msg_index,
+    msg_index,
     msg :type :: STRING AS msg_type,
     IFF(
       msg :attributes [0] :key :: STRING = 'action',
@@ -148,11 +145,6 @@ add_chain_id AS (
 ),
 final_msg_table AS (
   SELECT
-    CONCAT(
-      tx_id,
-      '-',
-      msg_index
-    ) AS message_id,
     block_id,
     block_timestamp,
     blockchain,
@@ -174,6 +166,11 @@ final_msg_table AS (
 ),
 msg_attribute AS (
   SELECT
+    ROW_NUMBER() over (
+      PARTITION BY tx_id
+      ORDER BY
+        tx_id
+    ) AS unique_number,
     block_id,
     block_timestamp,
     blockchain,
@@ -203,7 +200,13 @@ msg_attribute AS (
 ),
 FINAL AS (
   SELECT
-    message_id,
+    concat_ws(
+      '-',
+      tx_id,
+      msg_index,
+      attribute_index,
+      unique_number
+    ) AS message_id,
     block_id,
     block_timestamp,
     blockchain,
