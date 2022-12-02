@@ -2,6 +2,7 @@
   materialized = "incremental",
   cluster_by = ["_inserted_timestamp"],
   unique_key = "message_id",
+  incremental_strategy = 'delete+insert'
 ) }}
 
 WITH txs AS (
@@ -48,7 +49,7 @@ msg_table AS (
     flatten_txs.tx_id,
     flatten_txs.tx_succeeded,
     flatten_log.value AS msg,
-    flatten_log.index :: INT AS msg_index,
+    msg_index,
     msg :type :: STRING AS msg_type,
     IFF(
       msg :attributes [0] :key :: STRING = 'action',
