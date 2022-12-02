@@ -132,13 +132,6 @@ with
         {{ incremental_load_filter("_inserted_timestamp") }}
     ),
 
-    labels as (
-        select 
-            label,
-            address
-        from {{ref ('core__dim_address_labels')}}
-    ),
-
     final_table as (
 
         select distinct
@@ -157,10 +150,10 @@ with
             to_amount,
             to_currency,
             to_decimal,
-            label as pool_id
+            contract_address as pool_id
         from union_swaps s
         left outer join transactions t on s.tx_id = t.tx_id
-        left outer join labels l on l.address = s.contract_address
+        
 
 
     )
