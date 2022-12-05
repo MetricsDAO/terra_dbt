@@ -32,6 +32,11 @@ on-run-start:
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
 models:
+  +copy_grants: true
+  +persist_docs:
+    relation: true
+    columns: true
+  +on_schema_change: "append_new_columns"
   +post-hook:
     [
       "{% if target.name == 'prod_cloud' and this.schema != 'bronze' %} grant select on {{ this }} to share terra_mdao {% endif %}",
