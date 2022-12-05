@@ -30,9 +30,7 @@ final AS (
         next_validators_hash,
         proposer_address,
         validators_hash,
-        validator_address_array,
-        _ingested_at,
-        _inserted_timestamp
+        validator_address_array
     FROM
         blocks
 )
