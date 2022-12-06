@@ -79,7 +79,7 @@ FINAL AS (
         base_blocks.header :validators_hash :: STRING AS validators_hash,
         base_blocks._ingested_at AS _ingested_at,
         base_blocks._inserted_timestamp AS _inserted_timestamp,
-        validators_address_array.address_array AS validator_address_array
+        validators_address_array.address_array :: ARRAY AS validator_address_array
     FROM
         base_blocks
     LEFT JOIN validators_address_array 
