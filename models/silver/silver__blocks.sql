@@ -52,7 +52,7 @@ validator_addresses as (
 ),
 validators_address_array as (
     SELECT
-        validator_addresses.block_id as block_id,
+        CAST(validator_addresses.block_id AS NUMBER(38,0)) as block_id,
         ARRAY_AGG(distinct validator_addresses.validator_address) as address_array
     FROM
         validator_addresses
