@@ -23,6 +23,7 @@ with
             _inserted_timestamp
         from {{ ref("silver__messages") }}
         where message_value:msg:decimals is not null
+        and {{ incremental_load_filter("_inserted_timestamp") }}
     ),
     address_labels as (select * from {{ ref('core__dim_address_labels')}})
 
