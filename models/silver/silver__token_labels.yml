@@ -1,15 +1,14 @@
 version: 2
+
 models:
-  version: 2
-models:
-  - name: silver__dim_tokens
+  - name: silver__token_labels
     descriptions: |-
       This table contains Terra2 blockchain's list of tokens and their labels.
 
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
-            - contract_address
+            - address
 
     columns:
 
@@ -48,8 +47,8 @@ models:
                 - STRING
                 - VARCHAR
 
-      - name: CONTRACT_ADDRESS
-        description: "{{ doc('contract_address') }}"
+      - name: ADDRESS
+        description: "{{ doc('address') }}"
         tests:
           - unique
           - not_null
