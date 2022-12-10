@@ -47,8 +47,16 @@ FINAL AS (
             t.creator,
             l.creator
         ) AS creator,
-        l.label_type,
+        IFF(
+            l.label_type is not null,
+            l.label_type,
+            'token') AS label_type,
+        IFF(
+            l.label_subtype is not null,
         l.label_subtype,
+        'token_contract'
+        ) as label_subtype
+        ,
         COALESCE(
             t.symbol,
             l.label
