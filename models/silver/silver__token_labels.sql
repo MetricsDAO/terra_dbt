@@ -1,7 +1,7 @@
 {{ config(
     materialized = "incremental",
     cluster_by = ["_inserted_timestamp::DATE"],
-    unique_key = "contract_address",
+    unique_key = "address",
 ) }}
 
 WITH token_labels AS (
