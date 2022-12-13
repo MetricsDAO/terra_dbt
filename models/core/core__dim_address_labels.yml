@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: core__dim_address_labels
+    descriptions: |-
+      This table contains Terra2 blockchain's list of tokens and their labels.
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - address
+
+    columns:
+
+      - name: BLOCKCHAIN
+        description: "{{ doc('blockchain') }}"
+
+      - name: DEPLOYMENT_TX_ID
+        description: "{{ doc('deployment_tx_id') }}"
+
+      - name: LABEL
+        description: "{{ doc('label') }}"
+
+      - name: ADDRESS
+        description: "{{ doc('address') }}"
+
+      - name: DECIMALS
+        description: "{{ doc('decimal') }}"
+ 
+      - name: CREATOR
+        description: "{{ doc('creator') }}"
+          
+      - name: LABEL_TYPE
+        description: "{{ doc('label_type') }}"
+
+      - name: LABEL_SUBTYPE
+        description: "{{ doc('label_subtype') }}"
+                
+      - name: PROJECT_NAME
+        description: "{{ doc('project_name') }}"
+
