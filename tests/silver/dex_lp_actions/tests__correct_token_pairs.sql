@@ -26,11 +26,11 @@ withdraws as (
 token_burns as (
     select
         tx_id,
-        logs:_contract_address_0 as currency,
+        logs:_contract_address_0::string as currency,
         logs:withdrawn_share::number as amount,
         label
     from withdraws
-    inner join pools on currency = pools.address
+    inner join pools on logs:_contract_address_0::string = pools.address
 ),
 
 withdraw_tokens as (
@@ -59,11 +59,11 @@ provides as (
 token_mints as (
     select
         tx_id,
-        logs:_contract_address_0 as currency,
+        logs:_contract_address_0::string as currency,
         logs:share::number as amount,
         label
     from provides
-    inner join pools on currency = pools.address
+    inner join pools on logs:_contract_address_0::string = pools.address
 ),
 
 provide_tokens as (
