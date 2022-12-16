@@ -8,7 +8,6 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - block_id
-
     columns:
       - name: BLOCK_ID
         description: "{{ doc('block_id')}}"
@@ -159,6 +158,16 @@ models:
               column_type_list:
                 - STRING
                 - VARCHAR
+
+      - name: VALIDATOR_ADDRESS_ARRAY
+        description: "{{ doc('validator_address_array') }}"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_in_type_list:
+              column_type_list:
+                - ARRAY
+                - VARIANT
+                - OBJECT
 
       - name: _INGESTED_AT
         description: "{{ doc('_ingested_at')}}"
