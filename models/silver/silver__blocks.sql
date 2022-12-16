@@ -28,41 +28,39 @@ WITH base_blocks AS (
                 _inserted_timestamp DESC
         ) = 1
 ),
-validator_signatures as (
+validator_signatures AS (
     SELECT
-        header :last_commit :height as block_id,
-        header :last_commit :signatures as signatures
+        header :last_commit :height AS block_id,
+        header :last_commit :signatures AS signatures
     FROM
-        -- {{ ref('bronze__blocks') }}
         base_blocks
---     WHERE
--- TRUE
---         qualify row_number() over (
---             partition by block_id 
---             order by 
---                 _inserted_timestamp) = 1
 ),
-validator_addresses as (
+validator_addresses AS (
     SELECT
-        validator_signatures.block_id as block_id,
-        s0.value :validator_address as validator_address
+        validator_signatures.block_id AS block_id,
+        s0.value :validator_address AS validator_address
     FROM
-        validator_signatures
-        , lateral flatten(input => validator_signatures.signatures) as s0
+        validator_signatures,
+        LATERAL FLATTEN(
+            input => validator_signatures.signatures
+        ) AS s0
 ),
-validators_address_array as (
+validators_address_array AS (
     SELECT
-        CAST(validator_addresses.block_id AS NUMBER(38,0)) as block_id,
-        ARRAY_AGG(distinct validator_addresses.validator_address) as address_array
+        CAST(validator_addresses.block_id AS NUMBER(38, 0)) AS block_id,
+        ARRAY_AGG(
+            DISTINCT validator_addresses.validator_address
+        ) AS address_array
     FROM
         validator_addresses
-    GROUP BY validator_addresses.block_id
+    GROUP BY
+        validator_addresses.block_id
 ),
 FINAL AS (
     SELECT
-        base_blocks.block_id as block_id,
-        base_blocks.block_timestamp as block_timestamp,
-        base_blocks.tx_count as tx_count,
+        base_blocks.block_id AS block_id,
+        base_blocks.block_timestamp AS block_timestamp,
+        base_blocks.tx_count AS tx_count,
         base_blocks.header :app_hash :: STRING AS block_hash,
         base_blocks.header :chain_id :: STRING AS chain_id,
         base_blocks.header :consensus_hash :: STRING AS consensus_hash,
@@ -82,8 +80,8 @@ FINAL AS (
         validators_address_array.address_array :: ARRAY AS validator_address_array
     FROM
         base_blocks
-    LEFT JOIN validators_address_array 
-        on validators_address_array.block_id = base_blocks.block_id
+        LEFT JOIN validators_address_array
+        ON validators_address_array.block_id = base_blocks.block_id
 )
 SELECT
     *
